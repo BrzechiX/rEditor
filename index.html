@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rEditor</title>
+    <link rel="icon" href="favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/dracula.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            background-color: #242527;
+        }
+        .editor-container {
+            width: 100%;
+            max-width: 800px;
+            background: rgb(60, 63, 71);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .CodeMirror {
+            height: calc(100vh - 40px);
+            width: 100vw;
+        }
+        .toolbar {
+            color: #51d6e7;
+            padding: 5px;
+            height: 30px;
+            background-color: #3c3f47;
+        }
+        .toolbar button, .toolbar select{
+            background-color: #545863;
+            height: 100%;
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-right: 5px;
+            border: none;
+            color: white;
+        }
+        .toolbar button:hover, .toolbar select:hover{
+            cursor: pointer;
+        }
+        .toolbar a{
+            color: #51d6e7;
+            font-weight: bold;
+            font-size: 18px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+    .cm-keyword {
+        color: #ff79c6;
+    }
+    .cm-number {
+        color: #bd93f9;
+    }
+    .cm-string {
+        color: #f1fa8c;
+    }
+    .cm-comment {
+        color: #6272a4;
+    }
+    .cm-metaa {
+        color: #8be9fd;
+    }
+    .cm-label {
+        color: #50fa7b;
+    }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <a>rEditor</a>
+        <button id="open-btn">Otwórz</button>
+        <button id="save-btn">Zapisz</button>
+        <select id="cpu-select">
+            <option value="PotaDOS">PotaDOS</option>
+            <option value="CPU575">CPU 5.75</option>
+        </select>
+        <button id="compile-btn">Kompiluj</button>
+    </div>
+    <div class="editor-container">
+        <textarea id="code-editor"></textarea>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="syntax.js"></script>
+    <script>
+        var editor = CodeMirror.fromTextArea(document.getElementById("code-editor"), {
+            lineNumbers: true,
+            mode: "mineasm",
+            theme: "dracula"
+        });
+
+        document.getElementById('open-btn').addEventListener('click', function() {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.lor';
+        input.onchange = function(event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+            reader.onload = function() {
+                editor.setValue(reader.result);
+            };
+            reader.readAsText(file);
+        };
+        input.click();
+    });
+
+    document.getElementById('save-btn').addEventListener('click', function() {
+        var text = editor.getValue();
+        var blob = new Blob([text], {type: 'lor'});
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement('a');
+        link.href = url;
+        link.download = 'code.lor';
+        link.click();
+    });
+
+    document.getElementById('compile-btn').addEventListener('click', function() {
+        var code = editor.getValue();
+
+        fetch('https://redstonefun.pl:28001', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain'
+            },
+            body: code
+        })
+        .then(response => response.text())
+        .then(result => {
+            var consoleElement = document.getElementById('console');
+            consoleElement.textContent = result;
+            consoleElement.style.display = 'block'; 
+        })
+        .catch(error => {
+            var consoleElement = document.getElementById('console');
+            consoleElement.textContent = '[Error] ' + error;
+            consoleElement.style.display = 'block';
+        });
+    });
+    </script>
+
+    <div id="console" style="display: none; background: #000000; color: #ffffff; padding: 10px; position: fixed; bottom: 0; left: 0; right: 0;"></div>
+</body>
+</html>
