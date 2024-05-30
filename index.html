@@ -17,13 +17,13 @@
             background-color: #242527;
         }
         .editor-container {
-            width: 100%;
+            width: 100vw;
             max-width: 800px;
             background: rgb(60, 63, 71);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .CodeMirror {
-            height: calc(100vh - 40px);
+            height: calc(100vh - 160px);
             width: 100vw;
         }
         .toolbar {
@@ -51,25 +51,36 @@
             margin-left: 10px;
             margin-right: 10px;
         }
-
-    .cm-keyword {
-        color: #ff79c6;
-    }
-    .cm-number {
-        color: #bd93f9;
-    }
-    .cm-string {
-        color: #f1fa8c;
-    }
-    .cm-comment {
-        color: #6272a4;
-    }
-    .cm-metaa {
-        color: #8be9fd;
-    }
-    .cm-label {
-        color: #50fa7b;
-    }
+        #console{
+            word-break: break-all;
+            height: 100px;
+            overflow-y: scroll;
+            background: #000000;
+            color: #ffffff;
+            padding: 10px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            font-family: "Lucida Console", "Courier New", monospace;
+        }
+        .cm-keyword {
+            color: #ff79c6;
+        }
+        .cm-number {
+            color: #bd93f9;
+        }
+        .cm-string {
+            color: #f1fa8c;
+        }
+        .cm-comment {
+            color: #6272a4;
+        }
+        .cm-metaa {
+            color: #8be9fd;
+        }
+        .cm-label {
+            color: #50fa7b;
+        }
     </style>
 </head>
 <body>
@@ -121,29 +132,45 @@
     });
 
     document.getElementById('compile-btn').addEventListener('click', function() {
-        var code = editor.getValue();
-
-        fetch('https://redstonefun.pl:28001', {
+        //fetch('http://localhost:28001/', {
+        fetch('https://reditor.redstonefun.pl/api', {
             method: 'POST',
             headers: {
-                'Content-Type': 'text/plain'
+                'Content-Type': 'application/json'
             },
-            body: code
+            body: JSON.stringify({
+                "code": editor.getValue()
+            })
         })
         .then(response => response.text())
         .then(result => {
-            var consoleElement = document.getElementById('console');
-            consoleElement.textContent = result;
-            consoleElement.style.display = 'block'; 
+            try {
+                result = JSON.parse(result);
+            } catch (e) {
+                consoleElement.innerHTML += "<br>" + result;
+            }
+            if (result.error) {
+                document.getElementById('console').innerHTML += "<br>" + "<label style=\"color: red\">" + result.error + "</label>";
+            } else {
+                result = JSON.stringify(result);
+                document.getElementById('console').innerHTML += "<br>" + "<label style=\"color: white\">" + result + "</label>";
+                console.log(result);
+            }
         })
         .catch(error => {
-            var consoleElement = document.getElementById('console');
-            consoleElement.textContent = '[Error] ' + error;
-            consoleElement.style.display = 'block';
+            document.getElementById('console').innerHTML += "<br>" + "<label style=\"color: red\">" + error + "</label>";
         });
     });
-    </script>
 
-    <div id="console" style="display: none; background: #000000; color: #ffffff; padding: 10px; position: fixed; bottom: 0; left: 0; right: 0;"></div>
+    fetch('./example.lor').then(response => {
+        return response.text();
+    }).then(text => {
+        editor.setValue(text);
+    }).catch(error => {
+        console.error('Error: ', error);
+    });
+    </script>
+    
+    <div id="console"><label style="color: #51d6e7">rEditor beta v1.01</label></div>
 </body>
 </html>
