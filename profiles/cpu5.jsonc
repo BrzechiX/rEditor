@@ -1,0 +1,739 @@
+{
+    "CPU":
+    {
+        "Name": "CPU5",
+        "Arch": "CPU",
+        "Author": "Everybodys' child",
+        "emulator":null,
+        "time_per_cycle":0.25,
+        
+        "ARGUMENTS":
+        {
+            "variants":
+            {
+                "default":
+                {
+                    "r2":{
+                        "size":4,
+                        "encoding":"binrev"
+                    },
+                    "r1":{
+                        "size":4,
+                        "encoding":"binrev"
+                    },
+                    "cu":{
+                        "size":8,
+                        "encoding":"binrev"
+                    }
+                },
+                "with_a1":
+                {
+                    "a1":{
+                        "size":8,
+                        "encoding":"binrev"
+                    },
+                    "cu":{
+                        "size":8,
+                        "encoding":"binrev"
+                    }
+                },
+                "long":
+                {
+                    "r2":{
+                        "size":4,
+                        "encoding":"binrev"
+                    },
+                    "r1":{
+                        "size":4,
+                        "encoding":"binrev"
+                    },
+                    "cu":{
+                        "size":8,
+                        "encoding":"binrev"
+                    },
+                    "n1":
+                    {
+                        "size":16,
+                        "encoding":"binrev"
+                    }
+                }
+            }
+        },
+        "ADRESSING":
+        {
+            "mode":"packed",
+            "bin_len":16,
+            "offset":1
+        },
+
+        "DEFINES":[
+            "__CPU5__"
+        ],
+        
+
+        
+        "KEYWORDS":{
+            "ENTRY":{
+                "offset":1,
+                "write":0
+            }
+        },
+
+        "FILL":"err",
+        
+        "COMMANDS":
+        {
+            "error":
+            {
+                "pattern":"err",
+                "command_layout": "default",
+                "bin":{
+                    "r2":0,
+                    "r1":0,
+                    "cu":0
+                }
+            },
+            "error PL":
+            {
+                "pattern":"blad",
+                "command_layout": "default",
+                "bin":{
+                    "r2":0,
+                    "r1":0,
+                    "cu":0
+                }
+            },
+
+            "interupt":
+            {
+                "pattern":"int {arg1:num}",
+                "command_layout": "with_a1",
+                "bin":{
+                    "a1":"arg1",
+                    "cu":1
+                }
+            },
+            "interupt PL":
+            {
+                "pattern":"przerywanie {arg1:num}",
+                "command_layout": "with_a1",
+                "bin":{
+                    "a1":"arg1",
+                    "cu":1
+                }
+            },
+
+            "move a1":
+            {
+                "pattern":"mov short {const:num} to [acc]",
+                "command_layout": "with_a1",
+                "bin":{
+                    "a1":"const",
+                    "cu":2
+                }
+            },
+            "move a1 PL":
+            {
+                "pattern":"kopiuj krotkie {const:num} do [acc]",
+                "command_layout": "with_a1",
+                "bin":{
+                    "a1":"const",
+                    "cu":2
+                }
+            },
+
+            "mov r1r2":
+            {
+                "pattern":"mov [{rfrom:num}] to [{rto:num}]",
+                "command_layout": "default",
+                "bin":{
+                    "r2":"rto",
+                    "r1":"rfrom",
+                    "cu":3
+                }
+            },
+            "mov r1r2 PL":
+            {
+                "pattern":"kopiuj [{rfrom:num}] do [{rto:num}]",
+                "command_layout": "default",
+                "bin":{
+                    "r2":"rto",
+                    "r1":"rfrom",
+                    "cu":3
+                }
+            },
+
+
+            "mov n1r2":
+            {
+                "pattern":"mov {const:num} to [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":0,
+                    "r1":"rto",
+                    "cu":4,
+                    "n1":"const"
+                }
+            },
+            "mov n1r2 PL":
+            {
+                "pattern":"kopiuj {const:num} do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":0,
+                    "r1":"rto",
+                    "cu":4,
+                    "n1":"const"
+                }
+            },
+
+            "alu short inc":
+            {
+                "pattern":"inc [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":0,
+                    "r1":"rto",
+                    "cu":6,
+                    "n1":3
+                }
+            },
+            "alu short inc PL":
+            {
+                "pattern":"inkrementuj [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":0,
+                    "r1":"rto",
+                    "cu":6,
+                    "n1":3
+                }
+            },
+
+            "alu short dec":
+            {
+                "pattern":"dec [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":0,
+                    "r1":"rto",
+                    "cu":6,
+                    "n1":4
+                }
+            },
+            "alu short dec PL":
+            {
+                "pattern":"dekrementuj [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":0,
+                    "r1":"rto",
+                    "cu":6,
+                    "n1":4
+                }
+            },
+
+            "alu short rsh":
+            {
+                "pattern":"rsh [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":0,
+                    "r1":"rto",
+                    "cu":6,
+                    "n1":5
+                }
+            },
+            "alu short rsh PL":
+            {
+                "pattern":"przesun w prawo [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":0,
+                    "r1":"rto",
+                    "cu":6,
+                    "n1":5
+                }
+            },
+
+            "alu short lsh":
+            {
+                "pattern":"lsh [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":0,
+                    "r1":"rto",
+                    "cu":6,
+                    "n1":6
+                }
+            },
+            "alu short lsh PL":
+            {
+                "pattern":"przesun w lewo [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":0,
+                    "r1":"rto",
+                    "cu":6,
+                    "n1":6
+                }
+            },
+        
+            "alu short with mov inc":
+            {
+                "pattern":"mov [{rfrom:num}]+1 to [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rto",
+                    "r1":"rfrom",
+                    "cu":7,
+                    "n1":3
+                }
+            },
+            "alu short with mov inc PL":
+            {
+                "pattern":"kopiuj [{rfrom:num}]+1 do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rto",
+                    "r1":"rfrom",
+                    "cu":7,
+                    "n1":3
+                }
+            },
+
+            "alu short with mov dec":
+            {
+                "pattern":"mov [{rfrom:num}]-1 to [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rto",
+                    "r1":"rfrom",
+                    "cu":7,
+                    "n1":4
+                }
+            },
+            "alu short with mov dec PL":
+            {
+                "pattern":"kopiuj [{rfrom:num}]-1 do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rto",
+                    "r1":"rfrom",
+                    "cu":7,
+                    "n1":4
+                }
+            },
+
+            "alu short with mov rsh":
+            {
+                "pattern":"mov [{rfrom:num}]/2 to [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rto",
+                    "r1":"rfrom",
+                    "cu":7,
+                    "n1":5
+                }
+            },
+            "alu short with mov rsh PL":
+            {
+                "pattern":"kopiuj [{rfrom:num}]/2 do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rto",
+                    "r1":"rfrom",
+                    "cu":7,
+                    "n1":5
+                }
+            },
+
+            "alu short with mov lsh":
+            {
+                "pattern":"mov [{rfrom:num}]*2 to [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rto",
+                    "r1":"rfrom",
+                    "cu":7,
+                    "n1":6
+                }
+            },
+            "alu short with mov lsh PL":
+            {
+                "pattern":"kopiuj [{rfrom:num}]*2 do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rto",
+                    "r1":"rfrom",
+                    "cu":7,
+                    "n1":6
+                }
+            },
+
+            "alu long add":
+            {
+                "pattern":"add [{rfrom:num}] to [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":8,
+                    "n1":0
+                }
+            },
+            "alu long add PL":
+            {
+                "pattern":"dodaj [{rfrom:num}] do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":8,
+                    "n1":0
+                }
+            },
+
+            "alu long sub":
+            {
+                "pattern":"sub [{rfrom:num}] from [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":8,
+                    "n1":1
+                }
+            },
+            "alu long sub PL":
+            {
+                "pattern":"odejmij [{rfrom:num}] od [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":8,
+                    "n1":1
+                }
+            },
+
+            "alu long xor":
+            {
+                "pattern":"xor [{rfrom:num}] with [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":8,
+                    "n1":7
+                }
+            },
+            "alu long xor PL":
+            {
+                "pattern":"zeksoruj [{rfrom:num}] z [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":8,
+                    "n1":7
+                }
+            },
+
+            "alu long and":
+            {
+                "pattern":"and [{rfrom:num}] with [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":8,
+                    "n1":8
+                }
+            },
+            "alu long and PL":
+            {
+                "pattern":"zanduj [{rfrom:num}] z [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":8,
+                    "n1":8
+                }
+            },
+
+            "alu long or":
+            {
+                "pattern":"or [{rfrom:num}] with [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":8,
+                    "n1":9
+                }
+            },
+            "alu long or PL":
+            {
+                "pattern":"zoruj [{rfrom:num}] z [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":8,
+                    "n1":9
+                }
+            },
+
+            "print r1":
+            {
+                "pattern":"print [{val:num}]",
+                "command_layout": "default",
+                "bin":{
+                    "r2":0,
+                    "r1":"val",
+                    "cu":10
+                }
+            },
+            "print r1 PL":
+            {
+                "pattern":"wyswietl [{val:num}]",
+                "command_layout": "default",
+                "bin":{
+                    "r2":0,
+                    "r1":"val",
+                    "cu":10
+                }
+            },
+
+            "jump r1":
+            {
+                "pattern":"jump {address:label}",
+                "command_layout": "long",
+                "bin":{
+                    "r2":0,
+                    "r1":0,
+                    "cu":11,
+                    "n1":"address"
+                }
+            },
+            "jump r1 PL":
+            {
+                "pattern":"skocz do {address:label}",
+                "command_layout": "long",
+                "bin":{
+                    "r2":0,
+                    "r1":0,
+                    "cu":11,
+                    "n1":"address"
+                }
+            },
+            "GPU setflag PL":
+            {
+                "pattern":"gpuuu ustaw flage",
+                "command_layout": "with_a1",
+                "bin":{
+                    "a1":0,
+                    "cu":12
+                }
+            },
+            "GPU mem PL":
+            {
+                "pattern":"gpuuu odswiez pamiec",
+                "command_layout": "with_a1",
+                "bin":{
+                    "a1":1,
+                    "cu":12
+                }
+            },
+            "GPU x PL":
+            {
+                "pattern":"gpuuu wpisz x",
+                "command_layout": "with_a1",
+                "bin":{
+                    "a1":2,
+                    "cu":12
+                }
+            },
+            "GPU y PL":
+            {
+                "pattern":"gpuuu wpisz y",
+                "command_layout": "with_a1",
+                "bin":{
+                    "a1":3,
+                    "cu":12
+                }
+            },
+            "GPU setpx PL":
+            {
+                "pattern":"gpuuu ciapnij piksel",
+                "command_layout": "with_a1",
+                "bin":{
+                    "a1":4,
+                    "cu":12
+                }
+            },
+
+
+            "jump equal":
+            {
+                "pattern":"if [{r1:num}] == [{r2:num}] jump {address:label}",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"r2",
+                    "r1":"r1",
+                    "cu":13,
+                    "n1":"address"
+                }
+            },
+            "jump equal PL":
+            {
+                "pattern":"jesli [{r1:num}] == [{r2:num}] skocz do {address:label}",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"r2",
+                    "r1":"r1",
+                    "cu":13,
+                    "n1":"address"
+                }
+            },
+
+            "jump greater":
+            {
+                "pattern":"if [{r1:num}] > [{r2:num}] jump {address:label}",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"r2",
+                    "r1":"r1",
+                    "cu":14,
+                    "n1":"address"
+                }
+            },
+            "jump greater PL":
+            {
+                "pattern":"jesli [{r1:num}] > [{r2:num}] skocz do {address:label}",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"r2",
+                    "r1":"r1",
+                    "cu":14,
+                    "n1":"address"
+                }
+            },
+
+            "fpu add":
+            {
+                "pattern":"fadd [{rfrom:num}] to [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":16,
+                    "n1":1
+                }
+            },
+            "fpu add PL":
+            {
+                "pattern":"fpuuu dodaj [{rfrom:num}] do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":16,
+                    "n1":1
+                }
+            },
+
+            "fpu sub":
+            {
+                "pattern":"fpuuu odejmij [{rfrom:num}] od [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":16,
+                    "n1":2
+                }
+            },
+            "fpu mul":
+            {
+                "pattern":"fmul [{rfrom:num}] by [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":16,
+                    "n1":3
+                }
+            },
+            "fpu mul PL":
+            {
+                "pattern":"fpuuu pomnoz [{rto:num}] przez [{rfrom:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":16,
+                    "n1":3
+                }
+            },
+
+            "fpu div":
+            {
+                "pattern":"fdiv [{rto:num}] by [{rfrom:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":16,
+                    "n1":4
+                }
+            },
+            "fpu div PL":
+            {
+                "pattern":"fpuuu podziel [{rto:num}] przez [{rfrom:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"rfrom",
+                    "r1":"rto",
+                    "cu":16,
+                    "n1":4
+                }
+            },
+            "fpu itof PL":
+            {
+                "pattern":"fpuuu itof [{src:num}] do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"src",
+                    "r1":"rto",
+                    "cu":16,
+                    "n1":5
+                }
+            },
+            "fpu utof PL":
+            {
+                "pattern":"fpuuu utof [{src:num}] do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"src",
+                    "r1":"rto",
+                    "cu":16,
+                    "n1":6
+                }
+            },
+            "fpu ftoi PL":
+            {
+                "pattern":"fpuuu ftoi [{src:num}] do [{rto:num}]",
+                "command_layout": "long",
+                "bin":{
+                    "r2":"src",
+                    "r1":"rto",
+                    "cu":16,
+                    "n1":7
+                }
+            }
+        }
+    }
+}

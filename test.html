@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resizable Panes</title>
+  <style>
+body, html {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  height: 100%;
+}
+
+.pane {
+  flex: 1;
+  overflow: auto;
+}
+
+.divider {
+  width: 100%;
+  height: 10px;
+  cursor: ns-resize;
+  background-color: #ccc;
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="pane" id="topPane"> <!-- zmieniamy lewy na top -->
+      <!-- Treść dla górnego okna -->
+    </div>
+    <div class="divider" id="divider"></div>
+    <div class="pane" id="bottomPane"> <!-- zmieniamy prawy na bottom -->
+      <!-- Treść dla dolnego okna -->
+    </div>
+  </div>
+
+  <script>
+    const divider = document.getElementById('divider');
+    const topPane = document.getElementById('topPane');
+    const bottomPane = document.getElementById('bottomPane');
+    let isDragging = false;
+
+    divider.addEventListener('mousedown', function(e) {
+      isDragging = true;
+    });
+
+    document.addEventListener('mousemove', function(e) {
+      if (isDragging) {
+        const containerRect = document.querySelector('.container').getBoundingClientRect();
+        const containerY = containerRect.top; // zmiana na górną krawędź kontenera
+        const mouseY = e.pageY; // zmiana na pozycję Y myszy
+        const topHeight = mouseY - containerY; // zmiana na obliczenie różnicy Y
+
+        topPane.style.height = topHeight + 'px';
+        bottomPane.style.height = (containerRect.height - topHeight - 10) + 'px'; // odejmujemy wysokość dividera
+        divider.style.top = topHeight + 'px'; // aktualizacja położenia paska
+      }
+    });
+
+    document.addEventListener('mouseup', function(e) {
+      isDragging = false;
+    });
+  </script>
+</body>
+</html>

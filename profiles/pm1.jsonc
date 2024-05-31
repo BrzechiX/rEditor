@@ -1,0 +1,402 @@
+{
+    "CPU":
+    {
+        "Name": "PM-1",
+        "Arch": "PM",
+        "Author": "Gwiezdny Kartofel",
+        "emulator":"pm1_emulator",
+        "time_per_cycle":3.3,
+        
+        "ARGUMENTS":{
+            "variants":{
+                "short":{
+                    "CU":{
+                        "size":4
+                    },
+                    "r2":{
+                        "size":2
+                    },
+                    "r1":{
+                        "size":2
+                    }
+                },
+                "long":{
+                    "CU":{
+                        "size":4
+                    },
+                    "r2":{
+                        "size":2
+                    },
+                    "r1":{
+                        "size":2
+                    },
+                    "n1":{
+                        "size":8
+                    }
+                },
+                "inject":
+                {
+                    "value":
+                    {
+                        "size": 8
+                    }
+                }
+            }
+        },
+        "ADRESSING":
+        {
+            "mode":"packed",
+            "bin_len":8,
+            "offset":0
+        },
+
+        "DEFINES":[
+            "__PM1__"
+        ],
+
+        "KEYWORDS":{
+            "CORE0":{
+                "offset":0,
+                "write":0
+            }
+        },
+
+        "SCHEMATIC":
+        {
+            "blank":"pm1_blank_rom.schem",
+            "high":"minecraft:lapis_block",
+            "low":"minecraft:redstone_block",
+            "layout": 
+            {
+                "offset":[0, 0, 0],
+                "stride":[0, 0, 9],
+                "size": 16,
+                "layout": 
+                {
+                    "offset":[0, 0, 0],
+                    "stride":[0, 3, 0],
+                    "size": 16,
+                    "layout":
+                    {
+                        "offset":[14, 0, 0],
+                        "stride":[-2, 0, 0],
+                        "size": 8,
+                        "layout": null
+                    }
+                }
+            }
+        },
+
+        "FILL":"err",
+
+        "COMMANDS":{
+            "nop":{
+                "pattern":"nop",
+                "command_layout": "short",
+                "bin":{
+                    "CU":2,
+                    "r1":0,
+                    "r2":0
+                }
+            },
+            "inject":{
+                "pattern":"inject {stream:num}",
+                "command_layout": "inject",
+                "bin":{
+                    "value":"stream"
+                }
+            },
+
+
+            "mov imm reg":{
+                "pattern":"mov {arg1:num}, reg[{arg2:num}]",
+                "command_layout": "long",
+                
+                "bin":
+                {
+                    "CU":1,
+                    "r2":0,
+                    "r1":"arg2",
+                    "n1":"arg1"
+                }
+            },
+            "mov reg reg":{
+                "pattern":"mov reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "short",
+                "bin":
+                {
+                    "CU":2,
+                    "r1":"arg2",
+                    "r2":"arg1"
+                }
+            },
+            "add reg reg":{
+                "pattern":"add reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "short",
+
+                "bin":
+                {
+                    "CU":3,
+                    "r1":"arg2",
+                    "r2":"arg1"
+                }
+            },
+            "sub reg reg":{
+                "pattern":"sub reg[{arg1:num}], reg[{arg2:num}]",
+
+                "command_layout": "short",
+
+                "bin":
+                {
+                    "CU":4,
+                    "r1":"arg2",
+                    "r2":"arg1"
+                }
+            },
+            "inc reg reg":{
+                "pattern":"inc reg[{arg1:num}]",
+
+                "command_layout": "short",
+
+                "bin":
+                {
+                    "CU":1,
+                    "r1":"arg1",
+                    "r2":1
+                }
+            },
+            "dec reg reg":{
+                "pattern":"dec reg[{arg1:num}]",
+                "command_layout": "short",
+
+                "bin":
+                {
+                    "CU":1,
+                    "r1":"arg1",
+                    "r2":2
+                }
+            },
+            "rsh reg reg":{
+                "pattern":"rsh reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "short",
+
+                "bin":
+                {
+                    "CU":5,
+                    "r1":"arg2",
+                    "r2":"arg1"
+                }
+            },
+            "lsh reg reg":{
+                "pattern":"lsh reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "short",
+
+                "bin":
+                {
+                    "CU":6,
+                    "r1":"arg2",
+                    "r2":"arg1"
+                }
+            },
+            "and reg reg":{
+                "pattern":"and reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "short",
+
+                "bin":
+                {
+                    "CU":7,
+                    "r1":"arg2",
+                    "r2":"arg1"
+                }
+            },
+            "or reg reg":{
+                "pattern":"or reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "short",
+
+                "bin":
+                {
+                    "CU":8,
+                    "r1":"arg2",
+                    "r2":"arg1"
+                }
+            },
+            "xor reg reg":{
+                "pattern":"xor reg[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "short",
+
+                "bin":
+                {
+                    "CU":9,
+                    "r1":"arg2",
+                    "r2":"arg1"
+                }
+            },
+            "jump equal reg":{
+                "pattern":"je reg[{arg1:num}], reg[{arg2:num}], {arg3:label}",
+                "command_layout": "long",
+
+                "bin":
+                {
+                    "CU":10,
+                    "r1":"arg1",
+                    "r2":"arg2",
+                    "n1":"arg3"
+                }
+            },
+            "jump greater reg":{
+                "pattern":"jg reg[{arg1:num}], reg[{arg2:num}], {arg3:label}",
+                "command_layout": "long",
+
+                "bin":
+                {
+                    "CU":11,
+                    "r1":"arg2",
+                    "r2":"arg1",
+                    "n1":"arg3"
+                }
+            },
+            "jump flag reg":{
+                "pattern":"jf {arg3:num}",
+                "command_layout": "long",
+
+                "bin":
+                {
+                    "CU":0,
+                    "r1":3,
+                    "r2":0,
+                    "n1":"arg3"
+                }
+            },
+            "mov ptr reg":{
+                "pattern":"mov ram[reg[{arg1:num}]], reg[{arg2:num}]",
+                "command_layout": "short",
+
+                "bin":
+                {
+                    "CU":12,
+                    "r1":"arg2",
+                    "r2":"arg1"
+                }
+            },
+            "mov ram reg":{
+                "pattern":"mov ram[{arg1:num}], reg[{arg2:num}]",
+                "command_layout": "long",
+
+                "bin":
+                {
+                    "CU":13,
+                    "r1":"arg2",
+                    "n1":"arg1"
+                }
+            },
+            "mov reg ptr":{
+                "pattern":"mov reg[{arg1:num}], ram[reg[{arg2:num}]]",
+                "command_layout": "short",
+
+                "bin":
+                {
+                    "CU":14,
+                    "r1":"arg1",
+                    "r2":"arg2"
+                }
+            },
+            "mov reg ram":{
+                "pattern":"mov reg[{arg1:num}], ram[{arg2:num}]",
+                "command_layout": "long",
+
+                "bin":
+                {
+                    "CU":15,
+                    "r1":"arg1",
+                    "n1":"arg2"
+                }
+            },
+            "shut":{
+                "pattern":"shut",
+                "command_layout": "short",
+
+                "bin":
+                {
+                    "CU":0,
+                    "r1":1,
+                    "r2":0
+                }
+            },
+            "jump":{
+                "pattern":"jmp {adress:label}",
+                "command_layout": "long",
+
+                "bin":
+                {
+                    "CU":0,
+                    "r1":2,
+                    "r2":0,
+                    "n1":"adress"
+                }
+            },
+            "call":{
+                "pattern":"call {adress:label}",
+                "command_layout": "long",
+                "bin":
+                {
+                    "CU":0,
+                    "r1":0,
+                    "r2":1,
+                    "n1":"adress"
+                }
+            },
+            "return":{
+                "pattern":"ret",
+                "command_layout": "short",
+                "bin":
+                {
+                    "CU":0,
+                    "r1":1,
+                    "r2":1
+                }
+            },
+            "int":{
+                "pattern":"int {arg1:num}",
+                "command_layout": "short",
+                "bin":
+                {
+                    "CU":0,
+                    "r1":0,
+                    "r2":"arg1"
+                }
+            },
+            "err":{
+                "pattern":"err",
+                "command_layout": "short",
+                "bin":
+                {
+                    "CU":0,
+                    "r1":0,
+                    "r2":0
+                }
+            },
+            "cls":
+            {
+                "pattern":"cls",
+                "command_layout":"short",
+                "bin":
+                {
+                    "CU":0,
+                    "r1":1,
+                    "r2":1
+                }
+            },
+            "jf":{
+                "pattern":"jf {adress:label}",
+                "command_layout": "long",
+                "bin":
+                {
+                    "CU":0,
+                    "r1":3,
+                    "r2":0,
+                    "n1":"adress"
+                }
+            }
+        }
+    }
+}

@@ -7,7 +7,18 @@
     <link rel="icon" href="favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/dracula.min.css">
+    <link rel="manifest" href="manifest.json">
     <style>
+        ::-webkit-scrollbar{
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track{
+            background-color: #1b1c1d;
+        }
+        
+        ::-webkit-scrollbar-thumb{
+            background: #5b6061;
+        }
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -63,7 +74,7 @@
             right: 0;
             font-family: "Lucida Console", "Courier New", monospace;
         }
-        .cm-keyword {
+        .cm-keyword, .cm-comma {
             color: #ff79c6;
         }
         .cm-number {
@@ -75,8 +86,11 @@
         .cm-comment {
             color: #6272a4;
         }
-        .cm-metaa {
+        .cm-preprocessor {
             color: #8be9fd;
+        }
+        .cm-wymysllorda {
+            color: #e93939;
         }
         .cm-label {
             color: #50fa7b;
@@ -85,12 +99,14 @@
 </head>
 <body>
     <div class="toolbar">
-        <a>rEditor</a>
+        rEditor
         <button id="open-btn">Otwórz</button>
         <button id="save-btn">Zapisz</button>
         <select id="cpu-select">
-            <option value="PotaDOS">PotaDOS</option>
-            <option value="CPU575">CPU 5.75</option>
+            <option disabled selected value style="display:none">Wybierz profil</option>
+            <option value="potados">PotaDOS</option>
+            <option value="cpu5">CPU 5</option>
+            <option value="pm1">PM-1</option>
         </select>
         <button id="compile-btn">Kompiluj</button>
     </div>
@@ -98,15 +114,20 @@
         <textarea id="code-editor"></textarea>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
-    <script src="syntax.js"></script>
+    <script src="syntax.js?v=1.0"></script>
     <script>
         var editor = CodeMirror.fromTextArea(document.getElementById("code-editor"), {
             lineNumbers: true,
-            mode: "mineasm",
+            mode: "potados",
             theme: "dracula"
         });
-
-        document.getElementById('open-btn').addEventListener('click', function() {
+    </script>
+    
+    <div id="console"><label style="color: #51d6e7">rEditor beta v1.03</label></div>
+</body>
+</html>
+<script>
+    document.getElementById('open-btn').addEventListener('click', function() {
         var input = document.createElement('input');
         input.type = 'file';
         input.accept = '.lor';
@@ -120,7 +141,6 @@
         };
         input.click();
     });
-
     document.getElementById('save-btn').addEventListener('click', function() {
         var text = editor.getValue();
         var blob = new Blob([text], {type: 'lor'});
@@ -130,9 +150,7 @@
         link.download = 'code.lor';
         link.click();
     });
-
     document.getElementById('compile-btn').addEventListener('click', function() {
-        //fetch('http://localhost:28001/', {
         fetch('https://reditor.redstonefun.pl/api', {
             method: 'POST',
             headers: {
@@ -146,6 +164,7 @@
         .then(result => {
             try {
                 result = JSON.parse(result);
+                console.log(result);
             } catch (e) {
                 consoleElement.innerHTML += "<br>" + result;
             }
@@ -154,23 +173,34 @@
             } else {
                 result = JSON.stringify(result);
                 document.getElementById('console').innerHTML += "<br>" + "<label style=\"color: white\">" + result + "</label>";
-                console.log(result);
             }
         })
         .catch(error => {
             document.getElementById('console').innerHTML += "<br>" + "<label style=\"color: red\">" + error + "</label>";
         });
     });
-
-    fetch('./example.lor').then(response => {
-        return response.text();
-    }).then(text => {
-        editor.setValue(text);
-    }).catch(error => {
-        console.error('Error: ', error);
+    document.getElementById('cpu-select').addEventListener('change', function() {
+        var selectedCPU = this.value;
+        console.log(selectedCPU);
+        editor.setOption("mode", selectedCPU);
     });
-    </script>
-    
-    <div id="console"><label style="color: #51d6e7">rEditor beta v1.01</label></div>
-</body>
-</html>
+    function loadExample(){
+        fetch('./example.lor').then(response => {
+            return response.text();
+        }).then(text => {
+            editor.setValue(text);
+        }).catch(error => {
+            console.error('Error: ', error);
+        });
+    }
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, err => {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+    }
+</script>
