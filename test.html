@@ -1,72 +1,217 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resizable Panes</title>
-  <style>
-body, html {
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
-}
-
-.container {
-  display: flex;
-  height: 100%;
-}
-
-.pane {
-  flex: 1;
-  overflow: auto;
-}
-
-.divider {
-  width: 100%;
-  height: 10px;
-  cursor: ns-resize;
-  background-color: #ccc;
-}
-
+    <title>W2UI Demo: layout/2</title>
+    <link rel="stylesheet" type="text/css" href="https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rEditor</title>
+    <link rel="icon" href="favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/dracula.min.css">
+    <style>
+      ::-webkit-scrollbar{
+          width: 10px;
+      }
+      ::-webkit-scrollbar-track{
+          background-color: #1b1c1d;
+      }
+      
+      ::-webkit-scrollbar-thumb{
+          background: #5b6061;
+      }
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          height: 100vh;
+          width: 100vw;
+          background-color: #242527;
+      }
+      .editor-container {
+          width: 100vw;
+          max-width: 800px;
+          background: rgb(60, 63, 71);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .CodeMirror {
+          height: calc(100vh - 160px);
+          width: 100vw;
+      }
+      .toolbar {
+          color: #51d6e7;
+          padding: 5px;
+          height: 30px;
+          background-color: #3c3f47;
+      }
+      .toolbar button, .toolbar select{
+          background-color: #545863;
+          height: 100%;
+          padding-left: 10px;
+          padding-right: 10px;
+          margin-right: 5px;
+          border: none;
+          color: white;
+      }
+      .toolbar button:hover, .toolbar select:hover{
+          cursor: pointer;
+      }
+      .toolbar a{
+          color: #51d6e7;
+          font-weight: bold;
+          font-size: 18px;
+          margin-left: 10px;
+          margin-right: 10px;
+      }
+      #console{
+          word-break: break-all;
+          height: 100%;
+          width: 100%;
+          overflow-y: scroll;
+          background: #000000;
+          color: #ffffff;
+          padding: 10px;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          font-family: "Lucida Console", "Courier New", monospace;
+      }
+      .cm-keyword, .cm-comma {
+          color: #ff79c6;
+      }
+      .cm-number {
+          color: #bd93f9;
+      }
+      .cm-string {
+          color: #f1fa8c;
+      }
+      .cm-comment {
+          color: #6272a4;
+      }
+      .cm-preprocessor {
+          color: #8be9fd;
+      }
+      .cm-wymysllorda {
+          color: #e93939;
+      }
+      .cm-label {
+          color: #50fa7b;
+      }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="pane" id="topPane"> <!-- zmieniamy lewy na top -->
-      <!-- Treść dla górnego okna -->
-    </div>
-    <div class="divider" id="divider"></div>
-    <div class="pane" id="bottomPane"> <!-- zmieniamy prawy na bottom -->
-      <!-- Treść dla dolnego okna -->
-    </div>
-  </div>
 
-  <script>
-    const divider = document.getElementById('divider');
-    const topPane = document.getElementById('topPane');
-    const bottomPane = document.getElementById('bottomPane');
-    let isDragging = false;
+<div id="layout" style="width: 100vw; height: 100vw;"></div>
 
-    divider.addEventListener('mousedown', function(e) {
-      isDragging = true;
-    });
+<script type="module">
+import { w2layout } from 'https://rawgit.com/vitmalina/w2ui/master/dist/w2ui.es6.min.js'
 
-    document.addEventListener('mousemove', function(e) {
-      if (isDragging) {
-        const containerRect = document.querySelector('.container').getBoundingClientRect();
-        const containerY = containerRect.top; // zmiana na górną krawędź kontenera
-        const mouseY = e.pageY; // zmiana na pozycję Y myszy
-        const topHeight = mouseY - containerY; // zmiana na obliczenie różnicy Y
-
-        topPane.style.height = topHeight + 'px';
-        bottomPane.style.height = (containerRect.height - topHeight - 10) + 'px'; // odejmujemy wysokość dividera
-        divider.style.top = topHeight + 'px'; // aktualizacja położenia paska
-      }
-    });
-
-    document.addEventListener('mouseup', function(e) {
-      isDragging = false;
-    });
-  </script>
+new w2layout({
+    box: '#layout',
+    name: 'layout',
+    padding: 4,
+    panels: [
+        { type: 'top', size: 50, resizable: true, html: '<div class="editor-container"><textarea id="code-editor"></textarea></div>' },
+        { type: 'main', html: '<div id="console"><label style="color: #51d6e7">rEditor beta v1.03</label></div>' },
+    ]
+})
+</script>
 </body>
 </html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+<script>
+  var editor = CodeMirror.fromTextArea(document.getElementById("code-editor"), {
+      lineNumbers: true,
+      mode: "potados",
+      theme: "dracula"
+  });
+  document.getElementById('open-btn').addEventListener('click', function() {
+      var input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.lor';
+      input.onchange = function(event) {
+          var file = event.target.files[0];
+          var reader = new FileReader();
+          reader.onload = function() {
+              editor.setValue(reader.result);
+          };
+          reader.readAsText(file);
+      };
+      input.click();
+  });
+  document.getElementById('save-btn').addEventListener('click', function() {
+      var text = editor.getValue();
+      var blob = new Blob([text], {type: 'lor'});
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement('a');
+      link.href = url;
+      link.download = 'code.lor';
+      link.click();
+  });
+  document.getElementById('compile-btn').addEventListener('click', function() {
+      if(document.getElementById('cpu-select').value == "none"){
+          document.getElementById('console').innerHTML += "<br>" + "<label style=\"color: red\">No profile provided</label>";
+          return;
+      }
+      fetch('https://reditor.redstonefun.pl/api', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+              "code": editor.getValue(),
+              "profile": document.getElementById('cpu-select').value
+          })
+      })
+      .then(response => response.text())
+      .then(result => {
+          try {
+              result = JSON.parse(result);
+              console.log(result);
+          } catch (e) {
+              consoleElement.innerHTML += "<br>" + result;
+          }
+          if (result.error) {
+              document.getElementById('console').innerHTML += "<br>" + "<label style=\"color: red\">" + result.error + "</label>";
+          } else {
+              document.getElementById('console').innerHTML += "<br>" + "<label style=\"color: green\">The program was compiled without errors</label>";
+              let gathered = result.gathered;
+              for (let key in gathered) {
+              if (gathered.hasOwnProperty(key)) {
+                  let value = gathered[key][0];
+                  let binaryValue = value.toString(2);
+                      console.log(binaryValue);
+                      document.getElementById('console').innerHTML += "<br>" + "<label style=\"color: white\">" + binaryValue + "</label>";
+                  }
+              }
+          }
+      })
+      .catch(error => {
+          document.getElementById('console').innerHTML += "<br>" + "<label style=\"color: red\">" + error + "</label>";
+      });
+  });
+  document.getElementById('cpu-select').addEventListener('change', function() {
+      var selectedCPU = this.value;
+      console.log(selectedCPU);
+      editor.setOption("mode", selectedCPU);
+  });
+  function loadExample(){
+      fetch('./example.lor').then(response => {
+          return response.text();
+      }).then(text => {
+          editor.setValue(text);
+      }).catch(error => {
+          console.error('Error: ', error);
+      });
+  }
+  if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+          .then(registration => {
+              console.log('ServiceWorker OK');
+          }, err => {
+              console.log('ServiceWorker registration failed: ', err);
+          });
+      });
+  }
+</script>
