@@ -1,11 +1,13 @@
-const CACHE_NAME = 'reditor-cache-31-05-2024-v19';
+const CACHE_NAME = 'reditor-cache-01-06-2024-v1';
 const urlsToCache = [
   '/',
   '/index.html',
   '/javascript.js',
   '/style.css',
   '/manifest.json',
-  '/favicon.png',
+  '/icon_192x192.png',
+  '/icon_256x256.png',
+  '/favicon.ico',
   'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/dracula.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js',

@@ -52,10 +52,6 @@ function fetchProfileCommands(profileName) {
                     return "string";
                 }
 
-                if (stream.match(/^\d+/)) {
-                    return "number";
-                }
-
                 if (stream.match(/^#[a-zA-Z_]\w*/)) {
                     return "preprocessor";
                 }
@@ -76,6 +72,17 @@ function fetchProfileCommands(profileName) {
                     if (stream.match(potadosCommands[i])) {
                         return "keyword";
                     }
+                }
+
+                if (stream.match(/\b([a-zA-Z][a-zA-Z0-9]*)\b/)) {
+                    return;
+                }
+
+                if (stream.match(/(?<![a-zA-Z0-9])\d+(?![a-zA-Z0-9])/) || 
+                    stream.match(/(?<![a-zA-Z0-9])0[0-7]+(?![a-zA-Z0-9])/) || 
+                    stream.match(/(?<![a-zA-Z0-9])0b[01]+(?![a-zA-Z0-9])/) || 
+                    stream.match(/(?<![a-zA-Z0-9])0x[\da-fA-F]+(?![a-zA-Z0-9])/)) {
+                    return "number";
                 }
 
                 stream.next();
@@ -112,10 +119,6 @@ function fetchProfileCommands(profileName) {
                     return "string";
                 }
 
-                if (stream.match(/^\d+/)) {
-                    return "number";
-                }
-
                 if (stream.match(/^#[a-zA-Z_]\w*/)) {
                     return "preprocessor";
                 }
@@ -136,6 +139,17 @@ function fetchProfileCommands(profileName) {
                     if (stream.match(cpu5Commands[i])) {
                         return "keyword";
                     }
+                }
+
+                if (stream.match(/\b([a-zA-Z][a-zA-Z0-9]*)\b/)) {
+                    return;
+                }
+
+                if (stream.match(/(?<![a-zA-Z0-9])\d+(?![a-zA-Z0-9])/) || 
+                    stream.match(/(?<![a-zA-Z0-9])0[0-7]+(?![a-zA-Z0-9])/) || 
+                    stream.match(/(?<![a-zA-Z0-9])0b[01]+(?![a-zA-Z0-9])/) || 
+                    stream.match(/(?<![a-zA-Z0-9])0x[\da-fA-F]+(?![a-zA-Z0-9])/)) {
+                    return "number";
                 }
 
                 stream.next();
@@ -172,16 +186,12 @@ function fetchProfileCommands(profileName) {
                     return "string";
                 }
 
-                if (stream.match(/^\d+/)) {
-                    return "number";
-                }
-
                 if (stream.match(/^#[a-zA-Z_]\w*/)) {
                     return "preprocessor";
                 }
 
                 if (stream.match(/^\.[a-zA-Z_]\w*/)) {
-                    return "wymysllorda";
+                    return "entrypoint";
                 }
 
                 if (stream.match(/^[a-zA-Z_]\w*:/)) {
@@ -196,6 +206,17 @@ function fetchProfileCommands(profileName) {
                     if (stream.match(pm1Commands[i])) {
                         return "keyword";
                     }
+                }
+
+                if (stream.match(/\b([a-zA-Z][a-zA-Z0-9]*)\b/)) {
+                    return;
+                }
+
+                if (stream.match(/(?<![a-zA-Z0-9])\d+(?![a-zA-Z0-9])/) || 
+                    stream.match(/(?<![a-zA-Z0-9])0[0-7]+(?![a-zA-Z0-9])/) || 
+                    stream.match(/(?<![a-zA-Z0-9])0b[01]+(?![a-zA-Z0-9])/) || 
+                    stream.match(/(?<![a-zA-Z0-9])0x[\da-fA-F]+(?![a-zA-Z0-9])/)) {
+                    return "number";
                 }
 
                 stream.next();
