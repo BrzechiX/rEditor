@@ -1,7 +1,9 @@
-const CACHE_NAME = 'reditor-cache-31-05-2024-v18';
+const CACHE_NAME = 'reditor-cache-31-05-2024-v19';
 const urlsToCache = [
   '/',
   '/index.html',
+  '/javascript.js',
+  '/style.css',
   '/manifest.json',
   '/favicon.png',
   'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css',
