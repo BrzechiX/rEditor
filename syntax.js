@@ -13,7 +13,33 @@ function fetchProfileCommands(profileName) {
                 }
             }
             commandsArray.sort((a, b) => b.localeCompare(a));
+            console.log("Commands for " + profileName + " loaded.");
             resolve(commandsArray);
+        })
+        .catch(error => {
+            console.error('Error: ', error);
+            reject(error);
+        });
+    });
+}
+
+function fetchProfileDefines(profileName) {
+    return new Promise((resolve, reject) => {
+        fetch(`./profiles/${profileName}.jsonc`)
+        .then(response => response.text())
+        .then(text => {
+            let definesArray = [];
+            text = JSON.parse(text);
+            for (let define in text.CPU.DEFINES) {
+                if (Array.isArray(text.CPU.DEFINES[define])) {
+                    definesArray.push(text.CPU.DEFINES[define][0]);
+                } else {
+                    definesArray.push(text.CPU.DEFINES[define]);
+                }
+            }
+            definesArray.sort((a, b) => b.localeCompare(a));
+            console.log("Defines for " + profileName + " loaded.");
+            resolve(definesArray);
         })
         .catch(error => {
             console.error('Error: ', error);
@@ -24,6 +50,7 @@ function fetchProfileCommands(profileName) {
 
 (async function() {
     let potadosCommands = await fetchProfileCommands('potados');
+    let potadosDefines = await fetchProfileDefines('potados');
     CodeMirror.defineMode("potados", function() {
         return {
             startState: function() {
@@ -57,7 +84,7 @@ function fetchProfileCommands(profileName) {
                 }
 
                 if (stream.match(/^\.[a-zA-Z_]\w*/)) {
-                    return "wymysllorda";
+                    return "entrypoint";
                 }
 
                 if (stream.match(/^[a-zA-Z_]\w*:/)) {
@@ -69,8 +96,14 @@ function fetchProfileCommands(profileName) {
                 }
 
                 for (var i = 0; i < potadosCommands.length; i++) {
-                    if (stream.match(potadosCommands[i])) {
+                    if (stream.match(new RegExp("^" + potadosCommands[i] + "\\b"))) {
                         return "keyword";
+                    }
+                }
+
+                for (var i = 0; i < potadosDefines.length; i++) {
+                    if (stream.match(new RegExp("^" + potadosDefines[i] + "\\b"))) {
+                        return "define";
                     }
                 }
 
@@ -91,6 +124,7 @@ function fetchProfileCommands(profileName) {
         };
     });
     let cpu5Commands = await fetchProfileCommands('cpu5');
+    let cpu5Defines= await fetchProfileDefines('cpu5');
     CodeMirror.defineMode("cpu5", function() {
         return {
             startState: function() {
@@ -124,7 +158,7 @@ function fetchProfileCommands(profileName) {
                 }
 
                 if (stream.match(/^\.[a-zA-Z_]\w*/)) {
-                    return "wymysllorda";
+                    return "entrypoint";
                 }
 
                 if (stream.match(/^[a-zA-Z_]\w*:/)) {
@@ -136,8 +170,14 @@ function fetchProfileCommands(profileName) {
                 }
 
                 for (var i = 0; i < cpu5Commands.length; i++) {
-                    if (stream.match(cpu5Commands[i])) {
+                    if (stream.match(new RegExp("^" + cpu5Commands[i] + "\\b"))) {
                         return "keyword";
+                    }
+                }
+
+                for (var i = 0; i < cpu5Defines.length; i++) {
+                    if (stream.match(new RegExp("^" + cpu5Defines[i] + "\\b"))) {
+                        return "define";
                     }
                 }
 
@@ -158,6 +198,7 @@ function fetchProfileCommands(profileName) {
         };
     });
     let pm1Commands = await fetchProfileCommands('pm1');
+    let pm1Defines = await fetchProfileDefines('pm1');
     CodeMirror.defineMode("pm1", function() {
         return {
             startState: function() {
@@ -203,8 +244,14 @@ function fetchProfileCommands(profileName) {
                 }
 
                 for (var i = 0; i < pm1Commands.length; i++) {
-                    if (stream.match(pm1Commands[i])) {
+                    if (stream.match(new RegExp("^" + pm1Commands[i] + "\\b"))) {
                         return "keyword";
+                    }
+                }
+
+                for (var i = 0; i < pm1Defines.length; i++) {
+                    if (stream.match(new RegExp("^" + pm1Defines[i] + "\\b"))) {
+                        return "define";
                     }
                 }
 

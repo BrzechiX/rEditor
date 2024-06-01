@@ -44,7 +44,7 @@ body {
 .toolbar button:hover, .toolbar select:hover{
     cursor: pointer;
 }
-.toolbar a{
+.toolbar label{
     color: #51d6e7;
     font-weight: bold;
     font-size: 18px;
@@ -65,6 +65,9 @@ body {
 }
 .cm-keyword, .cm-comma {
     color: #ff79c6;
+}
+.cm-define {
+    color: #bd93f9;
 }
 .cm-number {
     color: #bd93f9;
