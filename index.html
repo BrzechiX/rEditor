@@ -12,25 +12,47 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <script>
+        var selectedCpu = "none";
+    </script>
     <div class="toolbar">
-        <label>rEditor</label>
-        <button id="open-btn">Open file</button>
-        <button id="save-btn">Save file</button>
-        <button onclick="document.getElementById('console').innerHTML ='<label style=\'color: #51d6e7\'>rEditor beta v1.04</label>'">Reset terminal</button>
-        <select id="cpu-select">
-            <option value="none" disabled selected style="display:none">Select profile</option>
-            <option value="potados">PotaDOS</option>
-            <option value="cpu5">CPU 5</option>
-            <option value="pm1">PM-1</option>
-        </select>
-        <button id="compile-btn">Compile</button>
+        <div class="menu">
+            <button class="menu-button">File</button>
+            <div class="dropdown-content">
+                <button id="open-btn">Open</button>
+                <button id="save-btn">Save</button>
+                <button onclick="loadExample()">Load example</button>
+            </div>
+        </div>
+        <div class="menu">
+            <button class="menu-button">Terminal</button>
+            <div class="dropdown-content">
+                <button onclick="document.getElementById('console').innerHTML ='<label style=\'color: #51d6e7\'>rEditor beta v1.04</label>'">Clear terminal</button>
+            </div>
+        </div>
+        <div class="menu">
+            <button class="menu-button">Profile</button>
+            <div class="dropdown-content">
+                <button onclick='selectedCpu = "potados"; editor.setOption("mode", "potados");'>PotaDOS</button>
+                <button onclick='selectedCpu = "cpu5"; editor.setOption("mode", "cpu5");'>CPU5</button>
+                <button onclick='selectedCpu = "pm1"; editor.setOption("mode", "pm1");'>PM-1</button>
+            </div>
+        </div>
+        <div class="menu">
+            <button class="menu-button">Compilator</button>
+            <div class="dropdown-content">
+                <button id="compile-btn">Compile and downlaod .schem</button>
+                <button id="compile-btn">Compile and downlaod .bin</button>
+                <button disabled id="compile-btn">Compile and load to CPU</button>
+            </div>
+        </div>
     </div>
     <div class="container">
         <div class="editor-container">
             <textarea id="code-editor"></textarea>
         </div>
         <div class="resizer"></div>
-        <div id="console"><label style="color: #51d6e7">rEditor beta v1.04</label></div>
+        <div id="console"><label style="color: #51d6e7">rEditor beta v1.04</label><br><label style="color: white">Select profile for syntax highlighter</label></div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
     <script src="syntax.js?v=1.04"></script>

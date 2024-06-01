@@ -79,7 +79,7 @@ document.getElementById('save-btn').addEventListener('click', function() {
 });
 
 document.getElementById('compile-btn').addEventListener('click', function() {
-    if(document.getElementById('cpu-select').value == "none"){
+    if(selectedCpu == "none"){
         document.getElementById('console').innerHTML += "<br>" + "<label style=\"color: red\">No profile provided</label>";
         return;
     }
@@ -90,7 +90,7 @@ document.getElementById('compile-btn').addEventListener('click', function() {
         },
         body: JSON.stringify({
             "code": editor.getValue(),
-            "profile": document.getElementById('cpu-select').value
+            "profile": selectedCpu
         })
     })
     .then(response => response.text())
@@ -121,12 +121,6 @@ document.getElementById('compile-btn').addEventListener('click', function() {
     });
 });
 
-document.getElementById('cpu-select').addEventListener('change', function() {
-    var selectedCPU = this.value;
-    console.log(selectedCPU);
-    editor.setOption("mode", selectedCPU);
-});
-
 function loadExample(){
     fetch('./example.lor').then(response => {
         return response.text();
@@ -147,3 +141,30 @@ if ('serviceWorker' in navigator) {
         });
     });
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+    var menuButtons = document.querySelectorAll(".menu-button");
+
+    menuButtons.forEach(function(button) {
+        button.addEventListener("click", function() {
+            var dropdownContent = this.nextElementSibling;
+            var openDropdown = document.querySelector(".dropdown-content.show");
+            if (openDropdown && openDropdown !== dropdownContent) {
+                openDropdown.classList.remove("show");
+            }
+            dropdownContent.classList.toggle("show");
+        });
+    });
+
+    window.onclick = function(event) {
+        if (!event.target.matches('.menu-button')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+});

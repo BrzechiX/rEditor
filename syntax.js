@@ -111,10 +111,10 @@ function fetchProfileDefines(profileName) {
                     return;
                 }
 
-                if (stream.match(/(?<![a-zA-Z0-9])\d+(?![a-zA-Z0-9])/) || 
-                    stream.match(/(?<![a-zA-Z0-9])0[0-7]+(?![a-zA-Z0-9])/) || 
-                    stream.match(/(?<![a-zA-Z0-9])0b[01]+(?![a-zA-Z0-9])/) || 
-                    stream.match(/(?<![a-zA-Z0-9])0x[\da-fA-F]+(?![a-zA-Z0-9])/)) {
+                if (stream.match(/(?<![a-zA-Z0-9])\d+(?![a-zA-Z0-9]|_)/) || 
+                    //stream.match(/(?<![a-zA-Z0-9])0[0-7]+(?![a-zA-Z0-9|_])/) || 
+                    stream.match(/(?<![a-zA-Z0-9])0b[01]+(?![a-zA-Z0-9]|_)/) || 
+                    stream.match(/(?<![a-zA-Z0-9])0x[\da-fA-F]+(?![a-zA-Z0-9]|_)/)) {
                     return "number";
                 }
 
@@ -185,12 +185,13 @@ function fetchProfileDefines(profileName) {
                     return;
                 }
 
-                if (stream.match(/(?<![a-zA-Z0-9])\d+(?![a-zA-Z0-9])/) || 
-                    stream.match(/(?<![a-zA-Z0-9])0[0-7]+(?![a-zA-Z0-9])/) || 
-                    stream.match(/(?<![a-zA-Z0-9])0b[01]+(?![a-zA-Z0-9])/) || 
-                    stream.match(/(?<![a-zA-Z0-9])0x[\da-fA-F]+(?![a-zA-Z0-9])/)) {
+                if (stream.match(/(?<![a-zA-Z0-9])\d+(?![a-zA-Z0-9]|_)/) || 
+                    //stream.match(/(?<![a-zA-Z0-9])0[0-7]+(?![a-zA-Z0-9|_])/) || 
+                    stream.match(/(?<![a-zA-Z0-9])0b[01]+(?![a-zA-Z0-9]|_)/) || 
+                    stream.match(/(?<![a-zA-Z0-9])0x[\da-fA-F]+(?![a-zA-Z0-9]|_)/)) {
                     return "number";
                 }
+
 
                 stream.next();
                 return null;
@@ -259,12 +260,13 @@ function fetchProfileDefines(profileName) {
                     return;
                 }
 
-                if (stream.match(/(?<![a-zA-Z0-9])\d+(?![a-zA-Z0-9])/) || 
-                    stream.match(/(?<![a-zA-Z0-9])0[0-7]+(?![a-zA-Z0-9])/) || 
-                    stream.match(/(?<![a-zA-Z0-9])0b[01]+(?![a-zA-Z0-9])/) || 
-                    stream.match(/(?<![a-zA-Z0-9])0x[\da-fA-F]+(?![a-zA-Z0-9])/)) {
+                if (stream.match(/(?<![a-zA-Z0-9])\d+(?![a-zA-Z0-9]|_)/) || 
+                    //stream.match(/(?<![a-zA-Z0-9])0[0-7]+(?![a-zA-Z0-9|_])/) || 
+                    stream.match(/(?<![a-zA-Z0-9])0b[01]+(?![a-zA-Z0-9]|_)/) || 
+                    stream.match(/(?<![a-zA-Z0-9])0x[\da-fA-F]+(?![a-zA-Z0-9]|_)/)) {
                     return "number";
                 }
+
 
                 stream.next();
                 return null;

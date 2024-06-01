@@ -11,18 +11,19 @@ body {
 }
 
 .toolbar {
-    color: #51d6e7;
-    padding: 5px;
-    height: 30px;
+    height: 28px;
+    border-top: 1px solid #2e3035;
+    font-size: 16px;
+    overflow: hidden;
     background-color: #3c3f47;
 }
 
 .toolbar button, .toolbar select {
-    background-color: #545863;
+    background-color: #3c3f47;
     height: 100%;
-    padding-left: 10px;
-    padding-right: 10px;
-    margin-right: 5px;
+    font-size: 16px;
+    padding-left: 6px;
+    padding-right: 6px;
     border: none;
     color: white;
 }
@@ -31,18 +32,63 @@ body {
     cursor: pointer;
 }
 
-.toolbar label {
-    color: #51d6e7;
-    font-weight: bold;
-    font-size: 18px;
-    margin-left: 10px;
-    margin-right: 10px;
+.menu {
+    float: left;
+}
+
+.menu-button {
+    background-color: #3c3f47;
+    color: white;
+    padding: 5px 10px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    min-width: 160px;
+}
+
+.dropdown-content button, .menu-bar select {
+    background-color: #545863;
+    font-size: 16px;
+    border: none;
+    width: 100%;
+    color: white;
+    text-align: left;
+    padding: 5px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content button:disabled, .dropdown-content button[disabled]{
+    color: #a0a0a0;
+}
+
+.dropdown-content button:disabled:hover, .dropdown-content button[disabled]:hover{
+    background-color: #545863;
+    cursor: auto;
+}
+
+.menu-bar select {
+    background-color: #3c3f47;
+}
+
+.dropdown-content button:hover {
+    background-color: #3c3f47;
+}
+
+.dropdown-content.show {
+    display: block;
 }
 
 .container {
     display: grid;
     grid-template-rows: 1fr 5px 150px;
-    height: calc(100vh - 40px);
+    height: calc(100vh - 29px);
 }
 
 .editor-container {
