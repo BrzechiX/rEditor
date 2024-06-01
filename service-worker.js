@@ -1,4 +1,4 @@
-const CACHE_NAME = 'reditor-cache-01-06-2024-v3';
+const CACHE_NAME = 'reditor-cache-01-06-2024-v5';
 const urlsToCache = [
   '/',
   '/index.html',

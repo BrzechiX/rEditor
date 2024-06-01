@@ -1,38 +1,23 @@
-::-webkit-scrollbar{
-    width: 10px;
-}
-::-webkit-scrollbar-track{
-    background-color: #1b1c1d;
-}
-
-::-webkit-scrollbar-thumb{
-    background: #5b6061;
-}
 body {
     font-family: Arial, sans-serif;
+    overflow: hidden;
     margin: 0;
     padding: 0;
     height: 100vh;
     width: 100vw;
     background-color: #242527;
+    display: flex;
+    flex-direction: column;
 }
-.editor-container {
-    width: 100vw;
-    max-width: 800px;
-    background: rgb(60, 63, 71);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-.CodeMirror {
-    height: calc(100vh - 160px);
-    width: 100vw;
-}
+
 .toolbar {
     color: #51d6e7;
     padding: 5px;
     height: 30px;
     background-color: #3c3f47;
 }
-.toolbar button, .toolbar select{
+
+.toolbar button, .toolbar select {
     background-color: #545863;
     height: 100%;
     padding-left: 10px;
@@ -41,49 +26,93 @@ body {
     border: none;
     color: white;
 }
-.toolbar button:hover, .toolbar select:hover{
+
+.toolbar button:hover, .toolbar select:hover {
     cursor: pointer;
 }
-.toolbar label{
+
+.toolbar label {
     color: #51d6e7;
     font-weight: bold;
     font-size: 18px;
     margin-left: 10px;
     margin-right: 10px;
 }
-#console{
+
+.container {
+    display: grid;
+    grid-template-rows: 1fr 5px 150px;
+    height: calc(100vh - 40px);
+}
+
+.editor-container {
+    overflow-y: auto;
+    background: rgb(60, 63, 71);
+}
+
+.CodeMirror {
+    height: 100%;
+    width: 100%;
+}
+
+.resizer {
+    background-color: #3c3f47;
+    cursor: ns-resize;
+    width: 100%;
+    height: 5px;
+    position: relative;
+}
+
+#console {
     word-break: break-all;
-    height: 100px;
-    overflow-y: scroll;
+    overflow-y: auto;
     background: #000000;
     color: #ffffff;
     padding: 10px;
-    bottom: 0;
-    left: 0;
-    right: 0;
     font-family: "Lucida Console", "Courier New", monospace;
 }
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #1b1c1d;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #5b6061;
+    /*border: 1px solid #1b1c1d;*/
+}
+
 .cm-keyword, .cm-comma {
     color: #ff79c6;
 }
+
 .cm-define {
     color: #bd93f9;
 }
+
 .cm-number {
     color: #bd93f9;
 }
+
 .cm-string {
     color: #f1fa8c;
 }
+
 .cm-comment {
     color: #6272a4;
 }
+
 .cm-preprocessor {
     color: #8be9fd;
 }
+
 .cm-entrypoint {
     color: #e93939;
 }
+
 .cm-label {
     color: #50fa7b;
 }
