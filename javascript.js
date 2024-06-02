@@ -103,17 +103,26 @@ document.getElementById('compile-btn').addEventListener('click', function() {
         }
         if (result.error) {
             document.getElementById('console').innerHTML += "<br>" + "<label style=\"color: red\">" + result.error + "</label>";
-        } else {
+        } else if(result.gathered) {
             document.getElementById('console').innerHTML += "<br>" + "<label style=\"color: green\">The program was compiled without errors</label>";
             let gathered = result.gathered;
             for (let key in gathered) {
-            if (gathered.hasOwnProperty(key)) {
-                let value = gathered[key][0];
-                let binaryValue = value.toString(2);
-                    console.log(binaryValue);
-                    document.getElementById('console').innerHTML += "<br>" + "<label style=\"color: white\">" + binaryValue + "</label>";
+                if (gathered.hasOwnProperty(key)) {
+                    let value = gathered[key][0];
+                    fetch(`./profiles/${selectedCpu}.jsonc`)
+                    .then(response => response.text())
+                    .then(text => {
+                        text = JSON.parse(text);
+                        let binLen = text.CPU.ADRESSING.bin_len;
+                        let binaryValue = value.toString(2).padStart(binLen, '0');
+                        console.log(binaryValue);
+                        document.getElementById('console').innerHTML += "<br>" + "<label style=\"color: white\">" + binaryValue + "</label>";
+                    });
                 }
             }
+        }
+        else {
+            document.getElementById('console').innerHTML += "<br>" + "<label style=\"color: red\">An error occured</label>";
         }
     })
     .catch(error => {
