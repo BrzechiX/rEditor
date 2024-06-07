@@ -1,17 +1,17 @@
-const CACHE_NAME = 'reditor-cache-01-06-2024-v8';
+const CACHE_NAME = 'reditor-cache';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/javascript.js',
+  '/scripts.js',
   '/style.css',
   '/manifest.json',
   '/icon_192x192.png',
   '/icon_256x256.png',
+  '/icon_512x512.png',
   '/favicon.ico',
   'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/dracula.min.css',
   'https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js',
-  '/syntax.js',
   '/profiles/potados.jsonc',
   '/profiles/cpu5.jsonc',
   '/profiles/pm1.jsonc'
@@ -20,33 +20,30 @@ const urlsToCache = [
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-    .then(cache => {
-      return cache.addAll(urlsToCache);
-    })
+      .then(cache => {
+        return cache.addAll(urlsToCache);
+      })
   );
 });
 
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
-    .then(response => {
-      if (response) {
-        return response;
-      }
-      return fetch(event.request).then(
-        response => {
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response;
-          }
-          let responseToCache = response.clone();
-          caches.open(CACHE_NAME)
-            .then(cache => {
-              cache.put(event.request, responseToCache);
-            });
-          return response;
-        }
-      );
-    })
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        return cache.match(event.request)
+          .then(response => {
+            const fetchPromise = fetch(event.request)
+              .then(networkResponse => {
+                cache.put(event.request, networkResponse.clone());
+                return networkResponse;
+              })
+              .catch(() => {
+                return response;
+              });
+
+            return response || fetchPromise;
+          });
+      })
   );
 });
 

@@ -7,6 +7,45 @@ function terminalPrint(message, color) {
     consoleElement.appendChild(messageElement);
 }
 
+function formatOutput(data) {
+    const maxLength = data.output.reduce((max, item) => {
+        const lineLength = item.line.trim().length;
+        return lineLength > max ? lineLength : max;
+    }, 0);
+  
+    const formattedData = data.output.map(item => {
+        if (Array.isArray(item.formatted) && item.line && typeof item.line === 'string' && typeof item.physical_adress === 'number') {
+          const formatted = item.formatted.join(' ');
+          const line = item.line.trim();
+          const physicalAddress = item.physical_adress.toString();
+          const padding = ' '.repeat(maxLength - line.length + 2);
+          const paddedLine = `${formatted}<label>  ${line}${padding}${physicalAddress}</label>`;
+          return paddedLine.replace(/ /g, '&nbsp;');
+        }
+        else {
+            return null;
+        }
+    }).filter(line => line !== null);
+    formattedData.forEach(line => terminalPrint(line, "white"));
+}
+
+function changeCommentVisibility(){
+    if (document.getElementById("change-comment-visibility").innerHTML == "Hide comments"){
+        document.querySelectorAll('#console > label > label').forEach(element => {
+            element.style.visibility = 'hidden';
+            element.style.fontSize = '0';
+        });
+        document.getElementById("change-comment-visibility").innerHTML = "Show comments";
+    }
+    else{
+        document.querySelectorAll('#console > label > label').forEach(element => {
+            element.style.visibility = 'visible';
+            element.style.fontSize = '100%';
+        });
+        document.getElementById("change-comment-visibility").innerHTML = "Hide comments";
+    }
+}
+
 async function fetchProfileData(profileName) {
     try {
         const response = await fetch(`./profiles/${profileName}.jsonc`);
@@ -195,7 +234,7 @@ document.getElementById('save-btn').addEventListener('click', function() {
     link.click();
 });
 
-document.getElementById('compile-btn').addEventListener('click', async function() {
+async function compile(method){
     if (selectedCpu == "none") {
         terminalPrint("No profile provided", "red");
         return;
@@ -209,6 +248,7 @@ document.getElementById('compile-btn').addEventListener('click', async function(
             },
             body: JSON.stringify({
                 "code": editor.getValue(),
+                "method": method,
                 "profile": selectedCpu
             })
         });
@@ -224,24 +264,26 @@ document.getElementById('compile-btn').addEventListener('click', async function(
             terminalPrint(result.error, "red");
         } else if (result.gathered) {
             terminalPrint("The program was compiled without errors", "green");
-            const gathered = result.gathered;
-
-            for (let key in gathered) {
-                if (gathered.hasOwnProperty(key)) {
-                    const value = gathered[key][0];
-                    const profileData = profileDataCache[selectedCpu];
-                    const binLen = profileData.data.CPU.ADRESSING.bin_len;
-                    const binaryValue = value.toString(2).padStart(binLen, '0');
-                    console.log(binaryValue);
-                    terminalPrint(binaryValue, "white");
-                }
-            }
+            console.log(result.output);
+            formatOutput(result);
         } else {
             terminalPrint("An error occurred", "red");
         }
     } catch (error) {
         terminalPrint(error, "red");
     }
+}
+
+document.getElementById('compile-btn').addEventListener('click', async function() {
+    compile("compile");
+});
+
+document.getElementById('compile-download-schem-btn').addEventListener('click', async function() {
+    compile("compile-download-schem");
+});
+
+document.getElementById('compile-download-bin-btn').addEventListener('click', async function() {
+    compile("compile-download-bin");
 });
 
 function loadExample() {
