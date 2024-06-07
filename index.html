@@ -27,7 +27,7 @@
         <div class="menu">
             <button class="menu-button">Terminal</button>
             <div class="dropdown-content">
-                <button onclick="document.getElementById('console').innerHTML ='<label style=\'color: #51d6e7\'>rEditor beta v1.05</label>'">Clear terminal</button>
+                <button onclick="document.getElementById('console').innerHTML ='<label style=\'color: #51d6e7\'>rEditor beta v1.06</label>'">Clear terminal</button>
                 <button id="change-comment-visibility" onclick="changeCommentVisibility()">Hide comments</button>
             </div>
         </div>
@@ -37,14 +37,15 @@
                 <button onclick='selectedCpu = "potados"; editor.setOption("mode", "potados");'>PotaDOS</button>
                 <button onclick='selectedCpu = "cpu5"; editor.setOption("mode", "cpu5");'>CPU5</button>
                 <button onclick='selectedCpu = "pm1"; editor.setOption("mode", "pm1");'>PM-1</button>
+                <button disabled>Upload own profile</button>
             </div>
         </div>
         <div class="menu">
             <button class="menu-button">Compiler</button>
             <div class="dropdown-content">
                 <button id="compile-btn">Compile</button>
-                <button id="compile-download-schem-btn">Compile and download .schem</button>
-                <button id="compile-download-bin-btn">Compile and download .bin</button>
+                <button disabled id="compile-download-schem-btn">Compile and download .schem</button>
+                <button disabled id="compile-download-bin-btn">Compile and download .bin</button>
                 <button disabled id="compile-load-to-cpu-btn">Compile and load to CPU</button>
             </div>
         </div>
@@ -54,7 +55,7 @@
             <textarea id="code-editor"></textarea>
         </div>
         <div class="resizer"></div>
-        <div id="console"><label style="color: #51d6e7">rEditor beta v1.05</label><br><label style="color: white">Select profile for syntax highlighter</label></div>
+        <div id="console"><label style="color: #51d6e7">rEditor beta v1.06</label><br><label style="color: white">Select profile for syntax highlighter</label></div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
     <script src="scripts.js"></script>

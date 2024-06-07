@@ -7,26 +7,39 @@ function terminalPrint(message, color) {
     consoleElement.appendChild(messageElement);
 }
 
+function filterComments(formatted, formatted_comments) {
+    let filtered_comments = [];
+    for (let i = 0; i < formatted_comments.length; i++) {
+        if (!formatted.includes(formatted_comments[i])) {
+            filtered_comments.push(formatted_comments[i]);
+        }
+    }
+    return filtered_comments;
+}
+
+function tabulate(array) {
+    const maxColumnLengths = array.reduce((acc, row) => {
+        row.forEach((col, index) => {
+            acc[index] = Math.max(acc[index] || 0, col.length);
+        });
+        return acc;
+    }, []);
+
+    const paddedArray = array.map(row => {
+        return row.map((col, index) => {
+            const paddingLength = maxColumnLengths[index] - col.length;
+            return col + ' '.repeat(paddingLength);
+        });
+    });
+    const result = paddedArray.map(row => row.join(' '));
+    return result;
+}
+
 function formatOutput(data) {
-    const maxLength = data.output.reduce((max, item) => {
-        const lineLength = item.line.trim().length;
-        return lineLength > max ? lineLength : max;
-    }, 0);
-  
-    const formattedData = data.output.map(item => {
-        if (Array.isArray(item.formatted) && item.line && typeof item.line === 'string' && typeof item.physical_adress === 'number') {
-          const formatted = item.formatted.join(' ');
-          const line = item.line.trim();
-          const physicalAddress = item.physical_adress.toString();
-          const padding = ' '.repeat(maxLength - line.length + 2);
-          const paddedLine = `${formatted}<label>  ${line}${padding}${physicalAddress}</label>`;
-          return paddedLine.replace(/ /g, '&nbsp;');
-        }
-        else {
-            return null;
-        }
-    }).filter(line => line !== null);
-    formattedData.forEach(line => terminalPrint(line, "white"));
+    const d = data.output.map(item => item.formatted.concat("<label>", filterComments(item.formatted, item.formatted_comments), "</label>"));
+    const lines = tabulate(d)
+    
+    terminalPrint(lines.join("<br>").replace(/ /g, '&nbsp;'), "white");
 }
 
 function changeCommentVisibility(){
